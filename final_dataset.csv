@@ -1,0 +1,21 @@
+,id,choiceNum,candNum,college,exp,job,gender,ethnicity,filtered,preference,Y
+0,R_0GkP9YSiNDMukb7,1,1,Boston University,5.0,Software Engineer,Male,White,True,2,0
+182,R_0GkP9YSiNDMukb7,1,2,Stanford University,7.0,Sales Representative,Female,White,True,2,1
+335,R_0GkP9YSiNDMukb7,2,1,Boston University,7.0,Sales Representative,Male,POC,False,1,1
+503,R_0GkP9YSiNDMukb7,2,2,Virginia Tech,6.0,Sales Representative,Male,POC,True,1,0
+658,R_0GkP9YSiNDMukb7,3,1,George Washington University,7.0,Software Engineer,Male,White,False,1,1
+827,R_0GkP9YSiNDMukb7,3,2,"University of California, Berkeley",6.0,Sales Representative,Male,White,False,1,0
+995,R_0GkP9YSiNDMukb7,4,1,Stanford University,6.0,Sales Representative,Male,POC,False,2,0
+336,R_0GkP9YSiNDMukb7,4,2,University of San Diego,6.0,Sales Representative,Male,POC,False,2,1
+1141,R_0GkP9YSiNDMukb7,5,1,George Washington University,5.0,Consultant,Female,White,False,2,0
+183,R_0GkP9YSiNDMukb7,5,2,George Washington University,7.0,Consultant,Female,White,True,2,1
+1317,R_10AVvGvm9BC40Sh,1,1,Boston University,6.0,Sales Representative,Male,White,True,1,1
+1505,R_10AVvGvm9BC40Sh,1,2,Boston University,7.0,Data Analyst,Female,POC,True,1,0
+1670,R_10AVvGvm9BC40Sh,2,1,Boston University,7.0,Data Analyst,Female,White,False,2,0
+1875,R_10AVvGvm9BC40Sh,2,2,University of San Diego,7.0,Software Engineer,Male,POC,True,2,1
+2042,R_10AVvGvm9BC40Sh,3,1,University of San Diego,5.0,Sales Representative,Female,White,True,1,1
+337,R_10AVvGvm9BC40Sh,3,2,"University of California, Berkeley",5.0,Software Engineer,Male,POC,False,1,0
+2214,R_10AVvGvm9BC40Sh,4,1,Boston University,7.0,Consultant,Male,POC,True,2,0
+2215,R_10AVvGvm9BC40Sh,4,2,Stanford University,6.0,Consultant,Male,POC,True,2,1
+1671,R_10AVvGvm9BC40Sh,5,1,George Washington University,7.0,Consultant,Female,White,False,1,1
+2384,R_10AVvGvm9BC40Sh,5,2,Virginia Tech,7.0,Data Analyst,Male,POC,False,1,0
