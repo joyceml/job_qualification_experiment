@@ -1,0 +1,70 @@
+---
+title: "w241_final_proj_data_reformatting"
+output: html_document
+date: '2022-04-02'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r imports}
+library(dplyr)
+library(tidyr)
+library(data.table)
+```
+
+```{r data}
+(d = data.table::fread(input = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vThX0ve07di_lhl8jaEhMZRRtIGUYezQGF5SfvdSvcXQxO6GtEDtn9lCJkOhCOt0SfEeQp7SZ3KsAkz/pub?gid=1019744473&single=true&output=csv'))
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r reformat data}
+# Reshape the sandwich attributes so each sandwich gets its own row.
+d_cand = d %>% select(id, starts_with("choice"))
+d_cand = d_cand %>%
+  gather(variable , value , -id) %>% 
+  mutate(
+    choiceNum = gsub("[A-Za-z]|_.+", "", variable), 
+    candNum = gsub(".+(.$)", "\\1", variable),
+    attribute = gsub(".+_|.$", "", variable) 
+  ) %>%
+  select(-variable) %>% 
+  spread(attribute , value)
+
+# Reshape the respondent’s preferences so each choice gets its own row.
+d_pref = d %>% select(id, ends_with("pref")) 
+d_pref = d_pref %>%
+  gather(variable , preference , -id) %>% 
+  mutate(
+    choiceNum = gsub("_pref", "", variable),
+    preference = as.numeric(gsub("Candidate ", "", preference))
+  ) %>% 
+  select(-variable)
+
+# Merge the attributes and preferences.
+d_stack = left_join(d_cand , d_pref) 
+d_stack = d_stack %>%
+  mutate(
+    Y = as.numeric(candNum == preference)
+  )
+
+# Check that you did not create any extra rows.
+nrow(d_stack) == (nrow(d) * max(d_stack$candNum) * max(d_stack$choiceNum))
+
+```
+
+```{r export file}
+write.csv(d_stack, "~/job_qualification_experiment_w241/formatted_data.csv", row.names = TRUE)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
