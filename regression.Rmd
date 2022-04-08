@@ -1,0 +1,79 @@
+---
+title: "regression"
+author: Amy Jung, Joyce Li, Meer Wu
+output: html_document
+date: '2022-04-08'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load packages, message = FALSE}
+library(data.table)
+
+library(sandwich)
+library(lmtest)
+
+library(AER) 
+
+library(ggplot2) 
+library(patchwork)
+
+library(stargazer)
+```
+
+## Load Data
+
+```{r pressure, echo=FALSE}
+d = fread('~/job_qualification_experiment_w241/final_dataset.csv')
+d[, male := ifelse(gender=='Male', 1, 0)]
+d[, top50 := ifelse(college_binary=='1-50', 1, 0)]
+d[, front_facing_role := ifelse(job_binary=='front-facing', 1, 0)]
+d
+```
+
+## Regression
+
+```{r basic model, echo=FALSE}
+# model with only beauty filter indicator, the feature we are most interested in investigating
+basic_mod = lm(Y ~ filtered, data=d)
+
+basic_mod$cluster_se <- sqrt(diag(vcovCL(basic_mod, cluster = d[, id])))
+
+stargazer(
+  basic_mod, 
+  se = list(basic_mod$cluster_se), 
+  type = 'text'
+)
+```
+
+```{r full model, echo=FALSE}
+# model with all the features varied in the conjoint experiment
+# features: beatuy filter, sex, ethnicity, years of experience, job role, college prestige
+full_mod = lm(Y ~ filtered + male + ethnicity + exp + front_facing_role + top50,
+              data=d)
+
+full_mod$cluster_se <- sqrt(diag(vcovCL(full_mod, cluster = d[, id])))
+
+stargazer(
+  full_mod, 
+  se = list(full_mod$cluster_se), 
+  type = 'text'
+)
+```
+
+```{r full model with covariates, echo=FALSE}
+# model with covariates (respondent demographics)
+mod_with_covariates = lm(Y ~ filtered + male + ethnicity + exp + front_facing_role + top50 +
+                             resp_sex + resp_ethnicity + resp_age + resp_education, data=d)
+
+mod_with_covariates$cluster_se <- sqrt(diag(vcovCL(mod_with_covariates, cluster = d[, id])))
+
+stargazer(
+  mod_with_covariates, 
+  se = list(mod_with_covariates$cluster_se), 
+  type = 'text'
+)
+```
