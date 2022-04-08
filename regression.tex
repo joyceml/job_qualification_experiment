@@ -1,0 +1,665 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Conjoint Experiment Regression},
+  pdfauthor={Amy Jung, Joyce Li, Meer Wu},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Conjoint Experiment Regression}
+\author{Amy Jung, Joyce Li, Meer Wu}
+\date{2022-04-08}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(data.table)}
+
+\FunctionTok{library}\NormalTok{(sandwich)}
+\FunctionTok{library}\NormalTok{(lmtest)}
+
+\FunctionTok{library}\NormalTok{(AER) }
+
+\FunctionTok{library}\NormalTok{(ggplot2) }
+\FunctionTok{library}\NormalTok{(patchwork)}
+
+\FunctionTok{library}\NormalTok{(stargazer)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{load-data}{%
+\subsection{Load Data}\label{load-data}}
+
+\begin{verbatim}
+##                      id choiceNum candNum                      college exp
+##    1: R_0GkP9YSiNDMukb7         1       1            Boston University   5
+##    2: R_0GkP9YSiNDMukb7         1       2          Stanford University   7
+##    3: R_0GkP9YSiNDMukb7         2       1            Boston University   7
+##    4: R_0GkP9YSiNDMukb7         2       2                Virginia Tech   6
+##    5: R_0GkP9YSiNDMukb7         3       1 George Washington University   7
+##   ---                                                                     
+## 2158: R_zeaJCDw8vld0P73         3       2 George Washington University   7
+## 2159: R_zeaJCDw8vld0P73         4       1                Virginia Tech   6
+## 2160: R_zeaJCDw8vld0P73         4       2                Virginia Tech   7
+## 2161: R_zeaJCDw8vld0P73         5       1 George Washington University   7
+## 2162: R_zeaJCDw8vld0P73         5       2            Boston University   6
+##                        job gender ethnicity filtered preference Y
+##    1:    Software Engineer   Male     White     TRUE          2 0
+##    2: Sales Representative Female     White     TRUE          2 1
+##    3: Sales Representative   Male       POC    FALSE          1 1
+##    4: Sales Representative   Male       POC     TRUE          1 0
+##    5:    Software Engineer   Male     White    FALSE          1 1
+##   ---                                                            
+## 2158: Sales Representative   Male       POC     TRUE          1 0
+## 2159:           Consultant   Male     White    FALSE          2 0
+## 2160: Sales Representative   Male     White     TRUE          2 1
+## 2161:         Data Analyst   Male       POC    FALSE          1 1
+## 2162:           Consultant   Male       POC     TRUE          1 0
+##                  resp_ethnicity resp_sex        resp_age       resp_education
+##    1: Black or African American     Male 35-44 years old     Bachelors Degree
+##    2: Black or African American     Male 35-44 years old     Bachelors Degree
+##    3: Black or African American     Male 35-44 years old     Bachelors Degree
+##    4: Black or African American     Male 35-44 years old     Bachelors Degree
+##    5: Black or African American     Male 35-44 years old     Bachelors Degree
+##   ---                                                                        
+## 2158:                     White     Male 35-44 years old High School Graduate
+## 2159:                     White     Male 35-44 years old High School Graduate
+## 2160:                     White     Male 35-44 years old High School Graduate
+## 2161:                     White     Male 35-44 years old High School Graduate
+## 2162:                     White     Male 35-44 years old High School Graduate
+##       college_binary   job_binary male top50 front_facing_role
+##    1:           1-50  back-facing    1     1                 0
+##    2:           1-50 front-facing    0     1                 1
+##    3:           1-50 front-facing    1     1                 1
+##    4:         50-100 front-facing    1     0                 1
+##    5:         50-100  back-facing    1     0                 0
+##   ---                                                         
+## 2158:         50-100 front-facing    1     0                 1
+## 2159:         50-100 front-facing    1     0                 1
+## 2160:         50-100 front-facing    1     0                 1
+## 2161:         50-100  back-facing    1     0                 0
+## 2162:           1-50 front-facing    1     1                 1
+\end{verbatim}
+
+\hypertarget{regression}{%
+\subsection{Regression}\label{regression}}
+
+\hypertarget{basic-model}{%
+\subsubsection{Basic Model}\label{basic-model}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# model with only beauty filter indicator, the feature we are most interested in investigating}
+\NormalTok{basic\_mod }\OtherTok{=} \FunctionTok{lm}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ filtered, }\AttributeTok{data=}\NormalTok{d)}
+
+\NormalTok{basic\_mod}\SpecialCharTok{$}\NormalTok{cluster\_se }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{diag}\NormalTok{(}\FunctionTok{vcovCL}\NormalTok{(basic\_mod, }\AttributeTok{cluster =}\NormalTok{ d[, id])))}
+
+\FunctionTok{stargazer}\NormalTok{(}
+\NormalTok{  basic\_mod, }
+  \AttributeTok{se =} \FunctionTok{list}\NormalTok{(basic\_mod}\SpecialCharTok{$}\NormalTok{cluster\_se), }
+  \AttributeTok{type =} \StringTok{\textquotesingle{}text\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ===============================================
+##                         Dependent variable:    
+##                     ---------------------------
+##                                  Y             
+## -----------------------------------------------
+## filtered                       0.011           
+##                               (0.022)          
+##                                                
+## Constant                     0.494***          
+##                               (0.011)          
+##                                                
+## -----------------------------------------------
+## Observations                   2,162           
+## R2                            0.0001           
+## Adjusted R2                   -0.0003          
+## Residual Std. Error      0.500 (df = 2160)     
+## F Statistic            0.266 (df = 1; 2160)    
+## ===============================================
+## Note:               *p<0.1; **p<0.05; ***p<0.01
+\end{verbatim}
+
+\hypertarget{full-conjoint-model}{%
+\subsubsection{Full Conjoint Model}\label{full-conjoint-model}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# model with all the features varied in the conjoint experiment}
+\CommentTok{\# features: beatuy filter, sex, ethnicity, years of experience, job role, college prestige}
+\NormalTok{full\_mod }\OtherTok{=} \FunctionTok{lm}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ filtered }\SpecialCharTok{+}\NormalTok{ male }\SpecialCharTok{+}\NormalTok{ ethnicity }\SpecialCharTok{+} \FunctionTok{as.factor}\NormalTok{(exp) }\SpecialCharTok{+}\NormalTok{ front\_facing\_role }\SpecialCharTok{+}\NormalTok{ top50,}
+              \AttributeTok{data=}\NormalTok{d)}
+
+\NormalTok{full\_mod}\SpecialCharTok{$}\NormalTok{cluster\_se }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{diag}\NormalTok{(}\FunctionTok{vcovCL}\NormalTok{(full\_mod, }\AttributeTok{cluster =}\NormalTok{ d[, id])))}
+
+\FunctionTok{stargazer}\NormalTok{(}
+\NormalTok{  full\_mod, }
+  \AttributeTok{se =} \FunctionTok{list}\NormalTok{(full\_mod}\SpecialCharTok{$}\NormalTok{cluster\_se), }
+  \AttributeTok{type =} \StringTok{\textquotesingle{}text\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ===============================================
+##                         Dependent variable:    
+##                     ---------------------------
+##                                  Y             
+## -----------------------------------------------
+## filtered                       0.011           
+##                               (0.021)          
+##                                                
+## male                         -0.044**          
+##                               (0.020)          
+##                                                
+## ethnicityWhite               0.086***          
+##                               (0.022)          
+##                                                
+## as.factor(exp)6              0.087***          
+##                               (0.026)          
+##                                                
+## as.factor(exp)7              0.152***          
+##                               (0.027)          
+##                                                
+## front_facing_role            -0.084***         
+##                               (0.022)          
+##                                                
+## top50                         -0.013           
+##                               (0.021)          
+##                                                
+## Constant                     0.439***          
+##                               (0.029)          
+##                                                
+## -----------------------------------------------
+## Observations                   2,162           
+## R2                             0.031           
+## Adjusted R2                    0.028           
+## Residual Std. Error      0.493 (df = 2154)     
+## F Statistic           9.982*** (df = 7; 2154)  
+## ===============================================
+## Note:               *p<0.1; **p<0.05; ***p<0.01
+\end{verbatim}
+
+\hypertarget{full-model-with-covariates}{%
+\subsubsection{Full Model with
+Covariates}\label{full-model-with-covariates}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# model with covariates (respondent demographics)}
+\NormalTok{mod\_with\_covariates }\OtherTok{=} \FunctionTok{lm}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ filtered }\SpecialCharTok{+}\NormalTok{ male }\SpecialCharTok{+}\NormalTok{ ethnicity }\SpecialCharTok{+} \FunctionTok{as.factor}\NormalTok{(exp) }\SpecialCharTok{+}\NormalTok{ front\_facing\_role }\SpecialCharTok{+}\NormalTok{ top50 }\SpecialCharTok{+}
+\NormalTok{                             resp\_sex }\SpecialCharTok{+}\NormalTok{ resp\_ethnicity }\SpecialCharTok{+}\NormalTok{ resp\_age }\SpecialCharTok{+}\NormalTok{ resp\_education, }\AttributeTok{data=}\NormalTok{d)}
+
+\NormalTok{mod\_with\_covariates}\SpecialCharTok{$}\NormalTok{cluster\_se }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{diag}\NormalTok{(}\FunctionTok{vcovCL}\NormalTok{(mod\_with\_covariates, }\AttributeTok{cluster =}\NormalTok{ d[, id])))}
+
+\FunctionTok{stargazer}\NormalTok{(}
+\NormalTok{  basic\_mod,}
+\NormalTok{  full\_mod,}
+\NormalTok{  mod\_with\_covariates, }
+  \AttributeTok{se =} \FunctionTok{list}\NormalTok{(mod\_with\_covariates}\SpecialCharTok{$}\NormalTok{cluster\_se), }
+  \AttributeTok{type =} \StringTok{\textquotesingle{}text\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## =============================================================================================================
+##                                                                  Dependent variable:                         
+##                                         ---------------------------------------------------------------------
+##                                                                           Y                                  
+##                                                 (1)                    (2)                     (3)           
+## -------------------------------------------------------------------------------------------------------------
+## filtered                                       0.011                  0.011                   0.012          
+##                                               (0.022)                (0.021)                 (0.021)         
+##                                                                                                              
+## male                                                                -0.044**                 -0.044**        
+##                                                                      (0.021)                 (0.021)         
+##                                                                                                              
+## ethnicityWhite                                                      0.086***                 0.086***        
+##                                                                      (0.021)                 (0.021)         
+##                                                                                                              
+## as.factor(exp)6                                                     0.087***                 0.088***        
+##                                                                      (0.026)                 (0.026)         
+##                                                                                                              
+## as.factor(exp)7                                                     0.152***                 0.153***        
+##                                                                      (0.026)                 (0.026)         
+##                                                                                                              
+## front_facing_role                                                   -0.084***               -0.084***        
+##                                                                      (0.021)                 (0.021)         
+##                                                                                                              
+## top50                                                                -0.013                   -0.013         
+##                                                                      (0.021)                 (0.021)         
+##                                                                                                              
+## resp_sexMale                                                                                  0.002          
+##                                                                                              (0.022)         
+##                                                                                                              
+## resp_ethnicityAsian                                                                           -0.011         
+##                                                                                              (0.134)         
+##                                                                                                              
+## resp_ethnicityBlack or African American                                                       -0.020         
+##                                                                                              (0.117)         
+##                                                                                                              
+## resp_ethnicityPrefer not to say                                                               0.001          
+##                                                                                              (0.193)         
+##                                                                                                              
+## resp_ethnicityWhite                                                                           -0.019         
+##                                                                                              (0.111)         
+##                                                                                                              
+## resp_age25-34 years old                                                                       0.006          
+##                                                                                              (0.059)         
+##                                                                                                              
+## resp_age35-44 years old                                                                       0.010          
+##                                                                                              (0.060)         
+##                                                                                                              
+## resp_age45-54 years old                                                                       0.006          
+##                                                                                              (0.064)         
+##                                                                                                              
+## resp_age55-64 years old                                                                       0.009          
+##                                                                                              (0.073)         
+##                                                                                                              
+## resp_age65+ years old                                                                         -0.056         
+##                                                                                              (0.185)         
+##                                                                                                              
+## resp_educationAssociate Degree                                                                -0.027         
+##                                                                                              (0.174)         
+##                                                                                                              
+## resp_educationBachelors Degree                                                                -0.012         
+##                                                                                              (0.144)         
+##                                                                                                              
+## resp_educationHigh School Graduate                                                            -0.007         
+##                                                                                              (0.150)         
+##                                                                                                              
+## resp_educationMasters Degree                                                                  -0.017         
+##                                                                                              (0.145)         
+##                                                                                                              
+## resp_educationOther                                                                           0.039          
+##                                                                                              (0.283)         
+##                                                                                                              
+## resp_educationPhD                                                                             0.010          
+##                                                                                              (0.167)         
+##                                                                                                              
+## Constant                                      0.494***              0.439***                 0.462**         
+##                                               (0.045)                (0.030)                 (0.192)         
+##                                                                                                              
+## -------------------------------------------------------------------------------------------------------------
+## Observations                                   2,162                  2,162                   2,162          
+## R2                                             0.0001                 0.031                   0.032          
+## Adjusted R2                                   -0.0003                 0.028                   0.021          
+## Residual Std. Error                      0.500 (df = 2160)      0.493 (df = 2154)       0.495 (df = 2138)    
+## F Statistic                             0.266 (df = 1; 2160) 9.982*** (df = 7; 2154) 3.032*** (df = 23; 2138)
+## =============================================================================================================
+## Note:                                                                             *p<0.1; **p<0.05; ***p<0.01
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(cjoint)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: survey
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: grid
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: Matrix
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'survey'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:graphics':
+## 
+##     dotchart
+\end{verbatim}
+
+\begin{verbatim}
+## cjoint: AMCE Estimator for Conjoint Experiments
+## Version: 2.1.0
+## Authors: Soubhik Barari, Elissa Berwick, Jens Hainmueller, Daniel Hopkins, Sean Liu, Anton Strezhnev, Teppei Yamamoto
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#amce model with all effects}
+\NormalTok{amce\_mod }\OtherTok{\textless{}{-}} \FunctionTok{amce}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ filtered }\SpecialCharTok{+}\NormalTok{ male }\SpecialCharTok{+}\NormalTok{ ethnicity }\SpecialCharTok{+}\NormalTok{ exp }\SpecialCharTok{+}\NormalTok{ front\_facing\_role }\SpecialCharTok{+}\NormalTok{ top50 }\SpecialCharTok{+}\NormalTok{ resp\_sex }\SpecialCharTok{+}\NormalTok{ resp\_ethnicity }\SpecialCharTok{+}\NormalTok{ resp\_age }\SpecialCharTok{+}\NormalTok{ resp\_education, }\AttributeTok{data=}\NormalTok{d,}
+                \AttributeTok{cluster=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{respondent.id=}\StringTok{"id"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: ethnicity changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: exp changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: filtered changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: frontfacingrole changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: male changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: respage changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: respeducation changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: respethnicity changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: respsex changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: top50 changed to factor
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(amce\_mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## ------------------------------------------
+## Average Marginal Component Effects (AMCE):
+## ------------------------------------------
+##          Attribute Level   Estimate  Std. Err   z value   Pr(>|z|)    
+##          ethnicity        0.0864437 0.0222522  3.884728 1.0244e-04 ***
+##                exp        0.0880933 0.0264928  3.325172 8.8364e-04 ***
+##                exp        0.1532160 0.0271484  5.643651 1.6648e-08 ***
+##           filtered        0.0118134 0.0216011  0.546887 5.8446e-01    
+##  front_facing_role       -0.0837168 0.0220642 -3.794233 1.4810e-04 ***
+##               male       -0.0440590 0.0206736 -2.131172 3.3075e-02   *
+##           resp_age        0.0062913 0.0094667  0.664568 5.0633e-01    
+##           resp_age        0.0098788 0.0097224  1.016077 3.0959e-01    
+##           resp_age        0.0059632 0.0100996  0.590441 5.5490e-01    
+##           resp_age        0.0087589 0.0133954  0.653872 5.1319e-01    
+##           resp_age       -0.0556137 0.0309385 -1.797556 7.2247e-02    
+##     resp_education       -0.0268578 0.0306107 -0.877400 3.8027e-01    
+##     resp_education       -0.0115173 0.0259328 -0.444122 6.5695e-01    
+##     resp_education       -0.0072896 0.0271311 -0.268682 7.8817e-01    
+##     resp_education       -0.0165309 0.0259971 -0.635874 5.2486e-01    
+##     resp_education        0.0394007 0.0418666  0.941102 3.4665e-01    
+##     resp_education        0.0100561 0.0297028  0.338558 7.3494e-01    
+##     resp_ethnicity       -0.0111151 0.0275238 -0.403835 6.8633e-01    
+##     resp_ethnicity       -0.0202091 0.0278928 -0.724527 4.6874e-01    
+##     resp_ethnicity        0.0014226 0.0291532  0.048796 9.6108e-01    
+##     resp_ethnicity       -0.0194841 0.0266974 -0.729813 4.6550e-01    
+##           resp_sex        0.0015451 0.0040023  0.386058 6.9945e-01    
+##              top50       -0.0129032 0.0215175 -0.599661 5.4873e-01    
+## ---
+## Number of Obs. = 2162
+## ---
+## Number of Respondents = 407
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05
+## 
+## --------------------
+## AMCE Baseline Levels:
+## --------------------
+##          Attribute Level
+##          ethnicity      
+##                exp      
+##           filtered      
+##  front_facing_role      
+##               male      
+##           resp_age      
+##     resp_education      
+##     resp_ethnicity      
+##           resp_sex      
+##              top50
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#amce model with everything including covariates}
+\NormalTok{amce\_mod\_full }\OtherTok{\textless{}{-}} \FunctionTok{amce}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ filtered }\SpecialCharTok{+}\NormalTok{ male }\SpecialCharTok{+}\NormalTok{ ethnicity }\SpecialCharTok{+}\NormalTok{ exp }\SpecialCharTok{+}\NormalTok{ front\_facing\_role }\SpecialCharTok{+}\NormalTok{ top50 }\SpecialCharTok{+}\NormalTok{ resp\_sex }\SpecialCharTok{+}\NormalTok{ resp\_ethnicity }\SpecialCharTok{+}\NormalTok{ resp\_age }\SpecialCharTok{+}\NormalTok{ resp\_education, }\AttributeTok{data=}\NormalTok{d,}
+                \AttributeTok{cluster=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{respondent.id=}\StringTok{"id"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: ethnicity changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: exp changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: filtered changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: frontfacingrole changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: male changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: respage changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: respeducation changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: respethnicity changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: respsex changed to factor
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + :
+## Warning: top50 changed to factor
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(amce\_mod\_full)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## ------------------------------------------
+## Average Marginal Component Effects (AMCE):
+## ------------------------------------------
+##          Attribute Level   Estimate  Std. Err   z value   Pr(>|z|)    
+##          ethnicity        0.0864437 0.0222522  3.884728 1.0244e-04 ***
+##                exp        0.0880933 0.0264928  3.325172 8.8364e-04 ***
+##                exp        0.1532160 0.0271484  5.643651 1.6648e-08 ***
+##           filtered        0.0118134 0.0216011  0.546887 5.8446e-01    
+##  front_facing_role       -0.0837168 0.0220642 -3.794233 1.4810e-04 ***
+##               male       -0.0440590 0.0206736 -2.131172 3.3075e-02   *
+##           resp_age        0.0062913 0.0094667  0.664568 5.0633e-01    
+##           resp_age        0.0098788 0.0097224  1.016077 3.0959e-01    
+##           resp_age        0.0059632 0.0100996  0.590441 5.5490e-01    
+##           resp_age        0.0087589 0.0133954  0.653872 5.1319e-01    
+##           resp_age       -0.0556137 0.0309385 -1.797556 7.2247e-02    
+##     resp_education       -0.0268578 0.0306107 -0.877400 3.8027e-01    
+##     resp_education       -0.0115173 0.0259328 -0.444122 6.5695e-01    
+##     resp_education       -0.0072896 0.0271311 -0.268682 7.8817e-01    
+##     resp_education       -0.0165309 0.0259971 -0.635874 5.2486e-01    
+##     resp_education        0.0394007 0.0418666  0.941102 3.4665e-01    
+##     resp_education        0.0100561 0.0297028  0.338558 7.3494e-01    
+##     resp_ethnicity       -0.0111151 0.0275238 -0.403835 6.8633e-01    
+##     resp_ethnicity       -0.0202091 0.0278928 -0.724527 4.6874e-01    
+##     resp_ethnicity        0.0014226 0.0291532  0.048796 9.6108e-01    
+##     resp_ethnicity       -0.0194841 0.0266974 -0.729813 4.6550e-01    
+##           resp_sex        0.0015451 0.0040023  0.386058 6.9945e-01    
+##              top50       -0.0129032 0.0215175 -0.599661 5.4873e-01    
+## ---
+## Number of Obs. = 2162
+## ---
+## Number of Respondents = 407
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05
+## 
+## --------------------
+## AMCE Baseline Levels:
+## --------------------
+##          Attribute Level
+##          ethnicity      
+##                exp      
+##           filtered      
+##  front_facing_role      
+##               male      
+##           resp_age      
+##     resp_education      
+##     resp_ethnicity      
+##           resp_sex      
+##              top50
+\end{verbatim}
+
+\end{document}
