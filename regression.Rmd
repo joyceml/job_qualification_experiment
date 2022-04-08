@@ -1,12 +1,18 @@
 ---
-title: "regression"
+title: "Conjoint Experiment Regression"
 author: Amy Jung, Joyce Li, Meer Wu
-output: html_document
+output:
+  pdf_document: default
+  word_document: default
 date: '2022-04-08'
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+knitr::knit_engines$set(problem_description = function(options) {
+  code <- paste(options$code, collapse = "\n")
+})
 ```
 
 
@@ -36,7 +42,9 @@ d
 
 ## Regression
 
-```{r basic model, echo=FALSE}
+### Basic Model
+
+```{r basic model, echo=TRUE}
 # model with only beauty filter indicator, the feature we are most interested in investigating
 basic_mod = lm(Y ~ filtered, data=d)
 
@@ -49,7 +57,9 @@ stargazer(
 )
 ```
 
-```{r full model, echo=FALSE}
+### Full Conjoint Model
+
+```{r full model, echo=TRUE}
 # model with all the features varied in the conjoint experiment
 # features: beatuy filter, sex, ethnicity, years of experience, job role, college prestige
 full_mod = lm(Y ~ filtered + male + ethnicity + exp + front_facing_role + top50,
@@ -64,7 +74,9 @@ stargazer(
 )
 ```
 
-```{r full model with covariates, echo=FALSE}
+### Full Model with Covariates
+
+```{r full model with covariates, echo=TRUE}
 # model with covariates (respondent demographics)
 mod_with_covariates = lm(Y ~ filtered + male + ethnicity + exp + front_facing_role + top50 +
                              resp_sex + resp_ethnicity + resp_age + resp_education, data=d)
