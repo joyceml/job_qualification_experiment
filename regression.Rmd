@@ -28,6 +28,7 @@ library(ggplot2)
 library(patchwork)
 
 library(stargazer)
+library(cregg)
 ```
 
 ## Load Data
@@ -108,7 +109,25 @@ summary(amce_mod)
 amce_mod_full <- amce(Y ~ filtered + male + ethnicity + exp + front_facing_role + top50 + resp_sex + resp_ethnicity + resp_age + resp_education, data=d,
                 cluster=TRUE, respondent.id="id")
 
-
 summary(amce_mod_full)
+```
+
+
+```{r}
+d$filtered_factor <- factor(d$filtered, levels=c("TRUE","FALSE"))
+d$gender_factor <- factor(d$gender, levels=c("Male","Female"))
+d$ethnicity_factor <- factor(d$ethnicity, levels=c("White","POC"))
+d$exp_factor <- factor(d$exp, levels=c("5","6","7"))
+d$job_binary_factor <- factor(d$job_binary, levels=c("front-facing","back-facing"))
+d$college_binary_factor <- factor(d$college_binary, levels=c("1-50", "50-100"))
+# to factor: resp_sex + resp_ethnicity + resp_age + resp_education
+d
+```
+
+
+```{r}
+amces <- cj(d, Y ~ filtered_factor + gender_factor + ethnicity_factor + exp_factor + job_binary_factor + college_binary_factor, id = ~id)
+head(amces[c("feature", "level", "estimate", "std.error")], 20L)
+
 ```
 
