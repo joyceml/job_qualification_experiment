@@ -80,13 +80,11 @@ stargazer(
 ```{r full model with covariates, echo=TRUE}
 # model with covariates (respondent demographics)
 mod_with_covariates = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 +
-                             resp_sex + resp_ethnicity + resp_age + resp_education, data=d)
+                             as.factor(resp_sex) + as.factor(resp_ethnicity) + as.factor(resp_age) + as.factor(resp_education), data=d)
 
 mod_with_covariates$cluster_se <- sqrt(diag(vcovCL(mod_with_covariates, cluster = d[, id])))
 
 stargazer(
-  basic_mod,
-  full_mod,
   mod_with_covariates, 
   se = list(mod_with_covariates$cluster_se), 
   type = 'text'
@@ -120,7 +118,7 @@ d$ethnicity_factor <- factor(d$ethnicity, levels=c("White","POC"))
 d$exp_factor <- factor(d$exp, levels=c("5","6","7"))
 d$job_binary_factor <- factor(d$job_binary, levels=c("front-facing","back-facing"))
 d$college_binary_factor <- factor(d$college_binary, levels=c("1-50", "50-100"))
-# to factor: resp_sex + resp_ethnicity + resp_age + resp_education
+
 d
 ```
 
@@ -128,6 +126,131 @@ d
 ```{r}
 amces <- cj(d, Y ~ filtered_factor + gender_factor + ethnicity_factor + exp_factor + job_binary_factor + college_binary_factor, id = ~id)
 head(amces[c("feature", "level", "estimate", "std.error")], 20L)
-
 ```
+
+```{r}
+plot(amces)
+```
+
+
+
+
+```{r}
+f1 <- Y ~ filtered_factor + gender_factor + ethnicity_factor + exp_factor + job_binary_factor + college_binary_factor
+plot(mm(d, f1, id = ~id), vline = 0.5)
+```
+```{r}
+d2 = fread('~/job_qualification_experiment_w241/final_dataset_no_drop.csv')
+d2[, male := ifelse(gender=='Male', 1, 0)]
+d2[, top50 := ifelse(college_binary=='1-50', 1, 0)]
+d2[, front_facing_role := ifelse(job_binary=='front-facing', 1, 0)]
+d2
+```
+
+
+```{r}
+#No Covariates No Drop
+full_mod_no_drop = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
+              data=d2)
+
+full_mod_no_drop$cluster_se <- sqrt(diag(vcovCL(full_mod_no_drop, cluster = d2[, id])))
+
+stargazer(
+  full_mod_no_drop, 
+  se = list(full_mod$cluster_se), 
+  type = 'text'
+)
+```
+
+```{r}
+# model with covariates (respondent demographics)
+no_drop_mod_with_covariates = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 +
+                            as.factor(resp_sex) + as.factor(resp_ethnicity) + as.factor(resp_age) + as.factor(resp_education), data=d2)
+
+no_drop_mod_with_covariates$cluster_se <- sqrt(diag(vcovCL(no_drop_mod_with_covariates, cluster = d2[, id])))
+
+stargazer(
+  mod_with_covariates, 
+  no_drop_mod_with_covariates,
+  se = list(mod_with_covariates$cluster_se), 
+  type = 'text'
+)
+```
+```{r}
+#anova(full_mod_no_drop, no_drop_mod_with_covariates)
+f_test <- var.test(full_mod_no_drop, no_drop_mod_with_covariates)
+f_test
+
+#covariates do not add anything to analysis, no significant difference
+```
+
+```{r}
+# model with covariates (respondent demographics)
+no_drop_basic = lm(Y ~ filtered, data=d2)
+no_drop_mod_with_interactions_gender = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 + filtered*male, data=d2)
+no_drop_mod_with_interactions_front_facing = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 + filtered*front_facing_role, data=d2)
+no_drop_mod_with_interactions_all = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 + filtered*male + filtered*front_facing_role, data=d2)
+
+no_drop_mod_with_interactions_front_facing$cluster_se <- sqrt(diag(vcovCL(no_drop_mod_with_interactions_front_facing, cluster = d2[, id])))
+stargazer(
+  no_drop_basic,
+  full_mod_no_drop, 
+  #no_drop_mod_with_interactions_gender,
+  #no_drop_mod_with_interactions_front_facing,
+  no_drop_mod_with_interactions_all,
+  se = list(no_drop_mod_with_interactions$cluster_se), 
+  type = 'text'
+)
+
+#gender interactions from the baseline: 
+#filters decrease men's probability by .046-0.013-0.054 = -0.021
+#filters increase women's probability by .046
+#[control] being a man decreases prob by -0.013
+#[control] no filters for women: chosen 43.7% of the time 
+
+#front-facing interactions from the baseline: 
+#filters decrease front-facing's probability by .013-0.029-0.014 = 0.003
+#filters increase back-facing's probability by .046
+#[control] being a front-facing decreases prob by -0.029
+#[control] no filters for back-facing: chosen 43.7% of the time 
+```
+```{r}
+#creating amce graph
+d2$filtered_factor <- factor(d2$filtered, levels=c("TRUE","FALSE"))
+d2$gender_factor <- factor(d2$gender, levels=c("Male","Female"))
+d2$ethnicity_factor <- factor(d2$ethnicity, levels=c("White","POC"))
+d2$exp_factor <- factor(d2$exp, levels=c("5","6","7"))
+d2$job_binary_factor <- factor(d2$job_binary, levels=c("front-facing","back-facing"))
+d2$college_binary_factor <- factor(d2$college_binary, levels=c("1-50", "50-100"))
+
+d2
+```
+
+
+```{r}
+#creating amce graph
+d2$filtered_factor <- factor(d$filtered, levels=c("TRUE","FALSE"))
+d2$gender_factor <- factor(d$gender, levels=c("Male","Female"))
+d2$ethnicity_factor <- factor(d$ethnicity, levels=c("White","POC"))
+d2$exp_factor <- factor(d$exp, levels=c("5","6","7"))
+d2$job_binary_factor <- factor(d$job_binary, levels=c("front-facing","back-facing"))
+d2$college_binary_factor <- factor(d$college_binary, levels=c("1-50", "50-100"))
+
+d2
+```
+
+```{r}
+amces <- cj(d2, Y ~ filtered_factor + gender_factor + ethnicity_factor + exp_factor + job_binary_factor + college_binary_factor , id = ~id)
+head(amces[c("feature", "level", "estimate", "std.error")], 20L)
+```
+
+```{r}
+plot(amces)
+```
+
+```{r}
+f1 <- Y ~ filtered_factor + gender_factor + ethnicity_factor + exp_factor + job_binary_factor + college_binary_factor
+plot(mm(d2, f1, id = ~id), vline = 0.5)
+```
+
 
