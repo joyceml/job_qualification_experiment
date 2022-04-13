@@ -1,4 +1,4 @@
-id,choiceNum,candNum,college,exp,job,gender,ethnicity,filtered,preference,Y,Q30,Q31,Q32,Q33,college_binary,job_binary
+id,choiceNum,candNum,college,exp,job,gender,ethnicity,filtered,preference,Y,resp_ethnicity,resp_sex,resp_age,resp_education,college_binary,job_binary
 R_0GkP9YSiNDMukb7,1,1,Boston University,5.0,Software Engineer,Male,White,True,2,0,Black or African American,Male,35-44 years old,Bachelors Degree,1-50,back-facing
 R_0GkP9YSiNDMukb7,1,2,Stanford University,7.0,Sales Representative,Female,White,True,2,1,Black or African American,Male,35-44 years old,Bachelors Degree,1-50,front-facing
 R_0GkP9YSiNDMukb7,2,1,Boston University,7.0,Sales Representative,Male,POC,False,1,1,Black or African American,Male,35-44 years old,Bachelors Degree,1-50,front-facing
