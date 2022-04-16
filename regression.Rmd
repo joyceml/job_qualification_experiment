@@ -62,7 +62,7 @@ stargazer(
 
 ```{r full model, echo=TRUE}
 # model with all the features varied in the conjoint experiment
-# features: beatuy filter, sex, ethnicity, years of experience, job role, college prestige
+# features: beauty filter, sex, ethnicity, years of experience, job role, college prestige
 full_mod = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
               data=d)
 
@@ -186,10 +186,10 @@ f_test
 
 ```{r}
 # model with covariates (respondent demographics)
-no_drop_basic = lm(Y ~ filtered, data=d2)
-no_drop_mod_with_interactions_gender = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 + filtered*male, data=d2)
-no_drop_mod_with_interactions_front_facing = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 + filtered*front_facing_role, data=d2)
-no_drop_mod_with_interactions_all = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 + filtered*male + filtered*front_facing_role, data=d2)
+no_drop_basic <- lm(Y ~ filtered, data=d2)
+no_drop_mod_with_interactions_gender <- lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 + filtered*male, data=d2)
+no_drop_mod_with_interactions_front_facing <- lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 + filtered*front_facing_role, data=d2)
+no_drop_mod_with_interactions_all <- lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 + filtered*male + filtered*front_facing_role, data=d2)
 
 no_drop_mod_with_interactions_front_facing$cluster_se <- sqrt(diag(vcovCL(no_drop_mod_with_interactions_front_facing, cluster = d2[, id])))
 stargazer(

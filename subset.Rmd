@@ -1,0 +1,236 @@
+---
+title: "Conjoint Experiment Regression -- subset"
+author: Amy Jung, Joyce Li, Meer Wu
+output:
+  pdf_document: default
+  word_document: default
+date: '2022-04-08'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+knitr::knit_engines$set(problem_description = function(options) {
+  code <- paste(options$code, collapse = "\n")
+})
+```
+
+
+```{r load packages, message = FALSE}
+library(data.table)
+
+library(sandwich)
+library(lmtest)
+
+library(AER) 
+
+library(ggplot2) 
+library(patchwork)
+
+library(stargazer)
+library(cregg)
+```
+
+## Load Data
+
+```{r pressure, echo=FALSE}
+d = fread('~/job_qualification_experiment_w241/final_dataset.csv')
+d[, male := ifelse(gender=='Male', 1, 0)]
+d[, top50 := ifelse(college_binary=='1-50', 1, 0)]
+d[, front_facing_role := ifelse(job_binary=='front-facing', 1, 0)]
+d
+```
+
+## Female
+filtered variable increases (compared to full df), but still not significant
+
+```{r female subset, echo=TRUE}
+
+females_df <- d[d$male == 0]
+
+### Full Model with Covariates
+
+# model with covariates (respondent demographics)
+mod_1 = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 +
+                             as.factor(resp_sex) + as.factor(resp_ethnicity) + as.factor(resp_age) + as.factor(resp_education), data=females_df)
+
+mod_1$cluster_se <- sqrt(diag(vcovCL(mod_1, cluster = females_df[, id])))
+
+stargazer(
+  mod_1, 
+  se = list(mod_1$cluster_se), 
+  type = 'text'
+)
+
+
+#No Covariates No Drop
+mod_1a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
+              data=females_df)
+
+mod_1a$cluster_se <- sqrt(diag(vcovCL(mod_1a, cluster = females_df[, id])))
+
+stargazer(
+  mod_1a, 
+  se = list(mod_1a$cluster_se), 
+  type = 'text'
+)
+```
+
+## Male
+filtered variable decreases (compared to full df) & is negative, but still not significant
+
+```{r male subset, echo=TRUE}
+males_df <- d[d$male == 1]
+
+### Full Model with Covariates
+
+# model with covariates (respondent demographics)
+mod_2 = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 +
+                             as.factor(resp_sex) + as.factor(resp_ethnicity) + as.factor(resp_age) + as.factor(resp_education),
+           data=males_df)
+
+mod_2$cluster_se <- sqrt(diag(vcovCL(mod_2, cluster = males_df[, id])))
+
+stargazer(
+  mod_2, 
+  se = list(mod_2$cluster_se), 
+  type = 'text'
+)
+
+
+#No Covariates No Drop
+mod_2a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
+              data=males_df)
+
+mod_2a$cluster_se <- sqrt(diag(vcovCL(mod_2a, cluster = males_df[, id])))
+
+stargazer(
+  mod_2a, 
+  se = list(mod_2a$cluster_se), 
+  type = 'text'
+)
+```
+
+
+## front-facing job
+filtered variable basically stays the same (compared to full df)
+
+```{r front-facing job subset, echo=TRUE}
+front_df <- d[d$front_facing_role == 1]
+
+### Full Model with Covariates
+
+# model with covariates (respondent demographics)
+mod_3 = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 +
+                             as.factor(resp_sex) + as.factor(resp_ethnicity) + as.factor(resp_age) + as.factor(resp_education),
+           data=front_df)
+
+mod_3$cluster_se <- sqrt(diag(vcovCL(mod_3, cluster = front_df[, id])))
+
+stargazer(
+  mod_3, 
+  se = list(mod_3$cluster_se), 
+  type = 'text'
+)
+
+
+#No Covariates No Drop
+mod_3a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
+              data=front_df)
+
+mod_3a$cluster_se <- sqrt(diag(vcovCL(mod_3a, cluster = front_df[, id])))
+
+stargazer(
+  mod_3a, 
+  se = list(mod_3a$cluster_se), 
+  type = 'text'
+)
+```
+
+
+## back-facing job
+filtered variable basically stays the same (compared to full df)
+
+```{r back-facing job subset, echo=TRUE}
+back_df <- d[d$front_facing_role == 0]
+
+### Full Model with Covariates
+
+# model with covariates (respondent demographics)
+mod_4 = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 +
+                             as.factor(resp_sex) + as.factor(resp_ethnicity) + as.factor(resp_age) + as.factor(resp_education),
+           data=back_df)
+
+mod_4$cluster_se <- sqrt(diag(vcovCL(mod_4, cluster = back_df[, id])))
+
+stargazer(
+  mod_4, 
+  se = list(mod_4$cluster_se), 
+  type = 'text'
+)
+
+
+#No Covariates No Drop
+mod_4a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
+              data=back_df)
+
+mod_4a$cluster_se <- sqrt(diag(vcovCL(mod_4a, cluster = back_df[, id])))
+
+stargazer(
+  mod_4a, 
+  se = list(mod_4a$cluster_se), 
+  type = 'text'
+)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
