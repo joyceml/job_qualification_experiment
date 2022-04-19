@@ -56,24 +56,31 @@ mod_1 = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role 
 
 mod_1$cluster_se <- sqrt(diag(vcovCL(mod_1, cluster = females_df[, id])))
 
-stargazer(
-  mod_1, 
-  se = list(mod_1$cluster_se), 
-  type = 'text'
-)
-
 
 #No Covariates No Drop
-mod_1a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
+mod_1a = lm(Y ~ filtered + ethnicity + as.factor(exp) + front_facing_role + top50,
               data=females_df)
 
 mod_1a$cluster_se <- sqrt(diag(vcovCL(mod_1a, cluster = females_df[, id])))
 
+# mod 1a with role interaction term
+mod_1b = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 +
+                filtered*front_facing_role,
+              data=females_df)
+
+mod_1b$cluster_se <- sqrt(diag(vcovCL(mod_1b, cluster = females_df[, id])))
+
 stargazer(
-  mod_1a, 
-  se = list(mod_1a$cluster_se), 
+  list(mod_1a, mod_1b), 
+  se = list(mod_1a$cluster_se, mod_1b$cluster_se), 
   type = 'text'
 )
+```
+
+
+```{r}
+# covariate balance check - covariates don't matter
+anova(mod_1, mod_1a)
 ```
 
 ## Male
@@ -85,32 +92,47 @@ males_df <- d[d$male == 1]
 ### Full Model with Covariates
 
 # model with covariates (respondent demographics)
-mod_2 = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 +
+mod_2 = lm(Y ~ filtered + ethnicity + as.factor(exp) + front_facing_role + top50 +
                              as.factor(resp_sex) + as.factor(resp_ethnicity) + as.factor(resp_age) + as.factor(resp_education),
            data=males_df)
 
 mod_2$cluster_se <- sqrt(diag(vcovCL(mod_2, cluster = males_df[, id])))
 
-stargazer(
-  mod_2, 
-  se = list(mod_2$cluster_se), 
-  type = 'text'
-)
-
 
 #No Covariates No Drop
-mod_2a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
+mod_2a = lm(Y ~ filtered + ethnicity + as.factor(exp) + front_facing_role + top50,
               data=males_df)
 
 mod_2a$cluster_se <- sqrt(diag(vcovCL(mod_2a, cluster = males_df[, id])))
 
+# with interaction terms
+mod_2b = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50 +
+                filtered*front_facing_role,
+              data=males_df)
+
+mod_2b$cluster_se <- sqrt(diag(vcovCL(mod_2b, cluster = males_df[, id])))
+
 stargazer(
-  mod_2a, 
-  se = list(mod_2a$cluster_se), 
+  list(mod_2a, mod_2b), 
+  se = list(mod_2a$cluster_se, mod_2b$cluster_se), 
   type = 'text'
 )
 ```
 
+# Table 2
+
+```{r}
+stargazer(
+  mod_1a, mod_2a, 
+  se = list(mod_1a$cluster_se, mod_2a$cluster_se), 
+  type = 'text'
+)
+```
+
+```{r}
+# covariates don't matter
+anova(mod_2, mod_2a)
+```
 
 ## front-facing job
 filtered variable basically stays the same (compared to full df)
@@ -127,12 +149,6 @@ mod_3 = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role 
 
 mod_3$cluster_se <- sqrt(diag(vcovCL(mod_3, cluster = front_df[, id])))
 
-stargazer(
-  mod_3, 
-  se = list(mod_3$cluster_se), 
-  type = 'text'
-)
-
 
 #No Covariates No Drop
 mod_3a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
@@ -141,12 +157,16 @@ mod_3a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role
 mod_3a$cluster_se <- sqrt(diag(vcovCL(mod_3a, cluster = front_df[, id])))
 
 stargazer(
-  mod_3a, 
-  se = list(mod_3a$cluster_se), 
+  list(mod_3, mod_3a), 
+  se = list(mod_3$cluster_se, mod_3a$cluster_se), 
   type = 'text'
 )
 ```
 
+```{r front-facing role f-test}
+# covariates don't matter
+anova(mod_3, mod_3a)
+```
 
 ## back-facing job
 filtered variable basically stays the same (compared to full df)
@@ -163,12 +183,6 @@ mod_4 = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role 
 
 mod_4$cluster_se <- sqrt(diag(vcovCL(mod_4, cluster = back_df[, id])))
 
-stargazer(
-  mod_4, 
-  se = list(mod_4$cluster_se), 
-  type = 'text'
-)
-
 
 #No Covariates No Drop
 mod_4a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role + top50,
@@ -177,13 +191,16 @@ mod_4a = lm(Y ~ filtered + male + ethnicity + as.factor(exp) + front_facing_role
 mod_4a$cluster_se <- sqrt(diag(vcovCL(mod_4a, cluster = back_df[, id])))
 
 stargazer(
-  mod_4a, 
-  se = list(mod_4a$cluster_se), 
+  list(mod_4, mod_4a), 
+  se = list(mod_4$cluster_se, mod_4a$cluster_se), 
   type = 'text'
 )
 ```
 
-
+```{r back-facing role f-test}
+# covariates don't matter
+anova(mod_4, mod_4a)
+```
 
 
 
